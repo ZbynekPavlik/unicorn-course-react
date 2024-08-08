@@ -1,10 +1,10 @@
-import { Button, Card } from "react-bootstrap";
+import {Button, Card} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import food from '../assets/21631.jpg';
 import './Recipe.css';
 
 import Icon from '@mdi/react';
-import { mdiSilverwareForkKnife } from '@mdi/js';
+import {mdiSilverwareForkKnife} from '@mdi/js';
 
 function Recipe(props) {
     const truncateDescription = (description, name) => {
@@ -19,9 +19,10 @@ function Recipe(props) {
 
     return (
         <Card>
-            <Card.Img variant="top" src={food} />
+            <Card.Img variant="top" src={food}/>
             <Card.Body>
-                <Card.Title className="center-text"><Icon path={mdiSilverwareForkKnife} size={1} /> {props.recipe.name}</Card.Title>
+                <Card.Title className="center-text"><Icon path={mdiSilverwareForkKnife} size={1}/> {props.recipe.name}
+                </Card.Title>
                 <Card.Text className="justify-text">
                     {truncateDescription(props.recipe.description, props.recipe.name)}
                 </Card.Text>

@@ -2,3 +2,8 @@
     margin-top: 1vh;
     margin-bottom: 1vh; /* Adjust the margin as needed */
 }
+
+.card-bigger-spacing {
+    margin-top: 1vh;
+    margin-bottom: 5vh; /* Adjust the margin as needed */
+}
