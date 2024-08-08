@@ -1,0 +1,13 @@
+.center-button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.justify-text {
+    text-align: justify;
+}
+
+.center-text {
+    text-align: center;
+}
