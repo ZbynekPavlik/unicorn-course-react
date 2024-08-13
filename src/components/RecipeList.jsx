@@ -1,10 +1,11 @@
 import './RecipeList.css';
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import {
     mdiArrowCollapseVertical,
     mdiArrowExpandVertical,
+    mdiMagnify,
     mdiMagnifyMinusOutline,
     mdiMagnifyPlusOutline,
     mdiTable,
@@ -13,14 +14,38 @@ import {
 import Icon from "@mdi/react";
 import RecipeGridList from "./RecipeGridList";
 import RecipeTableList from "./RecipeTableList";
+import Form from "react-bootstrap/Form";
 
 function RecipeList({recipeList}) {
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
     const [viewType, setViewType] = useState("grid")
+    const [searchBy, setSearchBy] = useState("");
 
     const isGrid = viewType === "grid"
+
+    const filteredRecipeList = useMemo(() => {
+        return recipeList.filter((item) => {
+            return (
+                item.name
+                    .toLocaleLowerCase()
+                    .includes(searchBy.toLocaleLowerCase()) ||
+                item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
+            );
+        });
+    }, [searchBy]);
+
+
+    function handleSearch(event) {
+        event.preventDefault();
+        setSearchBy(event.target["searchInput"].value);
+    }
+
+    function handleSearchDelete(event) {
+        if (!event.target.value) setSearchBy("");
+    }
+
 
     return (
         <>
@@ -28,6 +53,27 @@ function RecipeList({recipeList}) {
             <Navbar bg="light">
                 <div className="container-fluid">
                     <Navbar.Brand>Seznam receptů</Navbar.Brand>
+
+
+                    <Form className="d-flex" onSubmit={handleSearch}>
+                        <Form.Control
+                            id={"searchInput"}
+                            style={{maxWidth: "500px"}}
+                            type="search"
+                            placeholder="Search..."
+                            aria-label="Search"
+                            onChange={handleSearchDelete}
+                        />
+                        <Button
+                            style={{marginRight: "8px"}}
+                            variant="outline-success"
+                            type="submit"
+                        >
+                            <Icon size={1} path={mdiMagnify}/>
+                        </Button>
+                    </Form>
+
+
                     <div className="d-flex ms-auto">
                         {isGrid && (
                             <div className="me-2">
@@ -72,14 +118,12 @@ function RecipeList({recipeList}) {
                 </div>
             </Navbar>
 
-
             {isGrid ? (
-                <RecipeGridList recipeList={recipeList} isBiggerSpacing={isBiggerSpacing}
+                <RecipeGridList recipeList={filteredRecipeList} isBiggerSpacing={isBiggerSpacing}
                                 isSmallDetail={isSmallDetail}/>
             ) : (
-                <RecipeTableList recipeList={recipeList}/>
+                <RecipeTableList recipeList={filteredRecipeList}/>
             )
-
             }
 
 
