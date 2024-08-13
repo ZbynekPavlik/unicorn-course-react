@@ -2,7 +2,9 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RecipeList from "./components/RecipeList";
 
+
 function App() {
+
 
     const recipeList = [
         {
@@ -541,11 +543,8 @@ function App() {
 
     return (
         <>
-            <h2 className="center-text">Varianta menší mezera</h2>
-            <RecipeList recipeList={recipeList} isBiggerSpacing={false}/>
 
-            <h2 className="center-text">Varianta větší mezera</h2>
-            <RecipeList recipeList={recipeList} isBiggerSpacing={true}/>
+            <RecipeList recipeList={recipeList}/>
 
             {/*odkaz kvuli pravum na obrazek*/}
             <a href="http://www.freepik.com">Designed by macrovector / Freepik</a>

@@ -6,7 +6,10 @@ import './Recipe.css';
 import Icon from '@mdi/react';
 import {mdiSilverwareForkKnife} from '@mdi/js';
 
-function Recipe(props) {
+
+function Recipe({recipe, isSmallDetail}) {
+
+
     const truncateDescription = (description, name) => {
         if (description.length > 180 && name.length > 38) {
             return description.slice(0, 180) + '...';
@@ -21,11 +24,21 @@ function Recipe(props) {
         <Card>
             <Card.Img variant="top" src={food}/>
             <Card.Body>
-                <Card.Title className="center-text"><Icon path={mdiSilverwareForkKnife} size={1}/> {props.recipe.name}
+                <Card.Title className="center-text"><Icon path={mdiSilverwareForkKnife} size={1}/> {recipe.name}
                 </Card.Title>
-                <Card.Text className="justify-text">
-                    {truncateDescription(props.recipe.description, props.recipe.name)}
-                </Card.Text>
+
+                {isSmallDetail &&
+                    <Card.Text className="justify-text truncate-text">
+                        {recipe.description}
+                    </Card.Text>
+                }
+
+                {!isSmallDetail &&
+                    <Card.Text className="justify-text">
+                        {truncateDescription(recipe.description, recipe.name)}
+                    </Card.Text>
+                }
+
                 <Button variant="primary" className="center-button">Více o receptu</Button>
             </Card.Body>
         </Card>
