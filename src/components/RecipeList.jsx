@@ -1,32 +1,26 @@
-import Recipe from "./Recipe";
-import {Col} from "react-bootstrap";
 import './RecipeList.css';
 import {useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
-import {mdiTable, mdiViewGridOutline} from "@mdi/js";
+import {
+    mdiArrowCollapseVertical,
+    mdiArrowExpandVertical,
+    mdiMagnifyMinusOutline,
+    mdiMagnifyPlusOutline,
+    mdiTable,
+    mdiViewGridOutline
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import RecipeGridList from "./RecipeGridList";
 import RecipeTableList from "./RecipeTableList";
 
 function RecipeList({recipeList}) {
 
-    const [isSmallDetail, setIsSmallDetail] = useState(true);
+    const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
     const [viewType, setViewType] = useState("grid")
 
     const isGrid = viewType === "grid"
-
-
-    function getRecipeList(recipeList) {
-        return recipeList.map((recipe) => {
-            return (
-                <Col xs={12} sm={6} md={4} lg={4} key={recipe.id} className={isBiggerSpacing ? "card-bigger-spacing" : "card-spacing"}>
-                    <Recipe recipe={recipe} isSmallDetail={isSmallDetail}/>
-                </Col>
-            );
-        });
-    }
 
     return (
         <>
@@ -34,20 +28,47 @@ function RecipeList({recipeList}) {
             <Navbar bg="light">
                 <div className="container-fluid">
                     <Navbar.Brand>Seznam receptů</Navbar.Brand>
-                    <Button
-                        variant="outline-primary"
-                        onClick={() =>
-                            setViewType((currentState) => {
-                                if (currentState === "grid") return "table";
-                                else return "grid";
-                            })
-                        }
-                    >
-
-                        <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline}/>{" "}
-                        {isGrid ? "Tabulka" : "Grid"}
-
-                    </Button>
+                    <div className="d-flex ms-auto">
+                        {isGrid && (
+                            <div className="me-2">
+                                <Button
+                                    variant="outline-primary"
+                                    onClick={() =>
+                                        setIsSmallDetail((currentState) => !currentState)
+                                    }
+                                >
+                                    <Icon size={1}
+                                          path={isSmallDetail ? mdiMagnifyPlusOutline : mdiMagnifyMinusOutline}/>{" "}
+                                    {isSmallDetail ? "Více textu" : "Méně textu"}
+                                </Button>
+                            </div>
+                        )}
+                        {isGrid && (
+                            <div className="me-2">
+                                <Button
+                                    variant="outline-primary"
+                                    onClick={() =>
+                                        setIsBiggerSpacing((currentState) => !currentState)
+                                    }
+                                >
+                                    <Icon size={1}
+                                          path={isBiggerSpacing ? mdiArrowCollapseVertical : mdiArrowExpandVertical}/>{" "}
+                                    {isBiggerSpacing ? "Zmenšit odsazení" : "Zvětšit odsazení"}
+                                </Button>
+                            </div>
+                        )}
+                        <div className="me-2">
+                            <Button
+                                variant="outline-primary"
+                                onClick={() =>
+                                    setViewType((currentState) => (currentState === "grid" ? "table" : "grid"))
+                                }
+                            >
+                                <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline}/>{" "}
+                                {isGrid ? "Tabulka" : "Grid"}
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </Navbar>
 
