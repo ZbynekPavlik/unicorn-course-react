@@ -1,5 +1,5 @@
+import React, {useMemo, useState} from 'react';
 import './RecipeList.css';
-import {useMemo, useState} from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import {
@@ -16,7 +16,7 @@ import RecipeGridList from "./RecipeGridList";
 import RecipeTableList from "./RecipeTableList";
 import Form from "react-bootstrap/Form";
 
-function RecipeList({recipeList}) {
+function RecipeList({recipeList, ingredientList}) {
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
@@ -119,7 +119,8 @@ function RecipeList({recipeList}) {
             </Navbar>
 
             {isGrid ? (
-                <RecipeGridList recipeList={filteredRecipeList} isBiggerSpacing={isBiggerSpacing}
+                <RecipeGridList recipeList={filteredRecipeList} ingredientList={ingredientList}
+                                isBiggerSpacing={isBiggerSpacing}
                                 isSmallDetail={isSmallDetail}/>
             ) : (
                 <RecipeTableList recipeList={filteredRecipeList}/>
