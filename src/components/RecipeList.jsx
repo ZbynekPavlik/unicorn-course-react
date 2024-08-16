@@ -14,16 +14,23 @@ import {
 import Icon from "@mdi/react";
 import RecipeGridList from "./RecipeGridList";
 import RecipeTableList from "./RecipeTableList";
-import Form from "react-bootstrap/Form";
+import Form from "react-bootstrap/Form"
+
+const GRID = "grid"
+
+
+
 
 function RecipeList({recipeList, ingredientList}) {
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
-    const [viewType, setViewType] = useState("grid")
+    const [viewType, setViewType] = useState(GRID)
     const [searchBy, setSearchBy] = useState("");
 
-    const isGrid = viewType === "grid"
+
+
+    const isGrid = viewType === GRID
 
     const filteredRecipeList = useMemo(() => {
         return recipeList.filter((item) => {
@@ -34,7 +41,7 @@ function RecipeList({recipeList, ingredientList}) {
                 item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
             );
         });
-    }, [searchBy]);
+    }, [searchBy, recipeList]);
 
 
     function handleSearch(event) {
