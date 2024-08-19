@@ -19,15 +19,12 @@ import Form from "react-bootstrap/Form"
 const GRID = "grid"
 
 
-
-
 function RecipeList({recipeList, ingredientList}) {
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
     const [viewType, setViewType] = useState(GRID)
     const [searchBy, setSearchBy] = useState("");
-
 
 
     const isGrid = viewType === GRID
@@ -57,88 +54,107 @@ function RecipeList({recipeList, ingredientList}) {
     return (
         <>
 
-            <Navbar bg="light">
+            <Navbar collapseOnSelect expand="sm" bg="light">
                 <div className="container-fluid">
                     <Navbar.Brand>Seznam receptů</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+                    <Navbar.Collapse style={{justifyContent: "right"}}>
 
-
-                    <Form className="d-flex" onSubmit={handleSearch}>
-                        <Form.Control
-                            id={"searchInput"}
-                            style={{maxWidth: "500px"}}
-                            type="search"
-                            placeholder="Search..."
-                            aria-label="Search"
-                            onChange={handleSearchDelete}
-                        />
-                        <Button
-                            style={{marginRight: "8px"}}
-                            variant="outline-success"
-                            type="submit"
-                        >
-                            <Icon size={1} path={mdiMagnify}/>
-                        </Button>
-                    </Form>
-
-
-                    <div className="d-flex ms-auto">
-                        {isGrid && (
-                            <div className="me-2">
-                                <Button
-                                    variant="outline-primary"
-                                    onClick={() =>
-                                        setIsSmallDetail((currentState) => !currentState)
-                                    }
-                                >
-                                    <Icon size={1}
-                                          path={isSmallDetail ? mdiMagnifyPlusOutline : mdiMagnifyMinusOutline}/>{" "}
-                                    {isSmallDetail ? "Více textu" : "Méně textu"}
-                                </Button>
-                            </div>
-                        )}
-                        {isGrid && (
-                            <div className="me-2">
-                                <Button
-                                    variant="outline-primary"
-                                    onClick={() =>
-                                        setIsBiggerSpacing((currentState) => !currentState)
-                                    }
-                                >
-                                    <Icon size={1}
-                                          path={isBiggerSpacing ? mdiArrowCollapseVertical : mdiArrowExpandVertical}/>{" "}
-                                    {isBiggerSpacing ? "Zmenšit odsazení" : "Zvětšit odsazení"}
-                                </Button>
-                            </div>
-                        )}
-                        <div className="me-2">
+                        <Form className="d-flex" onSubmit={handleSearch}>
+                            <Form.Control
+                                id={"searchInput"}
+                                style={{maxWidth: "500px"}}
+                                type="search"
+                                placeholder="Search..."
+                                aria-label="Search"
+                                onChange={handleSearchDelete}
+                            />
                             <Button
-                                variant="outline-primary"
-                                onClick={() =>
-                                    setViewType((currentState) => (currentState === "grid" ? "table" : "grid"))
-                                }
+                                style={{marginRight: "8px"}}
+                                variant="outline-success"
+                                type="submit"
                             >
-                                <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline}/>{" "}
-                                {isGrid ? "Tabulka" : "Grid"}
+                                <Icon size={1} path={mdiMagnify}/>
                             </Button>
+                        </Form>
+
+
+                        <div className="d-flex ms-auto">
+                            {isGrid && (
+                                <div className="me-2">
+                                    <Button
+                                        className={"d-none d-md-block"}
+                                        variant="outline-primary"
+                                        onClick={() =>
+                                            setIsSmallDetail((currentState) => !currentState)
+                                        }
+                                    >
+                                        <Icon size={1}
+                                              path={isSmallDetail ? mdiMagnifyPlusOutline : mdiMagnifyMinusOutline}/>{" "}
+                                        {isSmallDetail ? "Více textu" : "Méně textu"}
+                                    </Button>
+                                </div>
+                            )}
+                            {isGrid && (
+                                <div className="me-2">
+                                    <Button
+
+                                        variant="outline-primary"
+                                        onClick={() =>
+                                            setIsBiggerSpacing((currentState) => !currentState)
+                                        }
+                                    >
+                                        <Icon size={1}
+                                              path={isBiggerSpacing ? mdiArrowCollapseVertical : mdiArrowExpandVertical}/>{" "}
+                                        {isBiggerSpacing ? "Zmenšit odsazení" : "Zvětšit odsazení"}
+                                    </Button>
+                                </div>
+                            )}
+                            <div className="me-2">
+                                <Button
+                                    className={"d-none d-md-block"}
+                                    variant="outline-primary"
+                                    onClick={() =>
+                                        setViewType((currentState) => (currentState === "grid" ? "table" : "grid"))
+                                    }
+                                >
+                                    <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline}/>{" "}
+                                    {isGrid ? "Tabulka" : "Grid"}
+                                </Button>
+
+                            </div>
                         </div>
-                    </div>
+
+
+                    </Navbar.Collapse>
+
                 </div>
             </Navbar>
 
-            {isGrid ? (
-                <RecipeGridList recipeList={filteredRecipeList} ingredientList={ingredientList}
-                                isBiggerSpacing={isBiggerSpacing}
-                                isSmallDetail={isSmallDetail}/>
-            ) : (
-                <RecipeTableList recipeList={filteredRecipeList}/>
-            )
-            }
+            <div>
+                {filteredRecipeList.length ? (
+                    isGrid ? (
+                        <RecipeGridList recipeList={filteredRecipeList} ingredientList={ingredientList}
+                                        isBiggerSpacing={isBiggerSpacing}
+                                        isSmallDetail={isSmallDetail}/>
+                    ) : (
+                        <RecipeTableList recipeList={filteredRecipeList}/>
+                    )
+                ) : (
+                    <div style={{margin: "16px auto", textAlign: "center"}}>
+                        Nejsou žádné recepty ke zobrazení
+                    </div>
+                )}
+            </div>
+
+
 
 
         </>
 
 
-    );
+    )
+
 }
 
 export default RecipeList;

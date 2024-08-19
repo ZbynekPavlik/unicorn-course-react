@@ -7,3 +7,16 @@
     margin-top: 1vh;
     margin-bottom: 5vh;
 }
+
+/* RecipeList.css */
+@media (max-width: 576px) {
+    .navbar .me-2 {
+        margin-right: 1rem !important;
+    }
+    .navbar .d-flex {
+        margin-bottom: 1rem;
+    }
+    .navbar .navbar-brand {
+        margin-left: 1rem;
+    }
+}
