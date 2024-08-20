@@ -2,14 +2,21 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RecipeList from "./components/RecipeList";
 import {useEffect, useState} from "react";
-import {mdiLoading} from "@mdi/js";
+import {mdiAlertOctagonOutline, mdiLoading} from "@mdi/js";
 import Icon from "@mdi/react";
+import {Outlet, useNavigate} from "react-router-dom";
+import {Container, Nav, NavDropdown} from "react-bootstrap";
+import Navbar from "react-bootstrap/Navbar";
+import { Offcanvas } from 'react-bootstrap';
 
 function App() {
     const [recipeLoadCall, setRecipeLoadCall] = useState({state: "pending"});
     const [recipeList, setRecipeList] = useState([]);
     const [ingredientLoadCall, setIngredientLoadCall] = useState({state: "pending"});
     const [ingredientList, setIngredientList] = useState([]);
+
+    let navigate = useNavigate();
+
 
     useEffect(() => {
         fetch(`http://localhost:3000/recipe/list`, {
@@ -83,9 +90,87 @@ function App() {
         }
     }
 
+
+    function getBookcookListDropdown() {
+        switch (loadCallState) {
+            case "pending":
+                return (
+                    <Nav.Link disabled={true}>
+                        <Icon size={1} path={mdiLoading} spin={true} /> Classroom List
+                    </Nav.Link>
+                );
+            case "success":
+                return (
+                    <NavDropdown title="Select Recipe" id="navbarScrollingDropdown">
+                        {recipeLoadCall.data.map((recipe) => {
+                            return (
+                                <NavDropdown.Item
+                                    onClick={() =>
+                                        navigate("/recipeDetail?id=" + recipe.id)
+                                    }
+                                >
+                                    {recipe.name}
+                                </NavDropdown.Item>
+                            );
+                        })}
+                    </NavDropdown>
+                );
+            case "error":
+                return (
+                    <div>
+                        <Icon size={1} path={mdiAlertOctagonOutline} /> Error
+                    </div>
+                );
+            default:
+                return null;
+        }
+    }
+
     return (
         <>
-            {getChild()}
+
+
+            <div className="App">
+                <Navbar
+                    fixed="top"
+                    expand={"sm"}
+                    className="mb-3"
+                    bg="dark"
+                    variant="dark"
+                >
+                    <Container fluid>
+                        <Navbar.Brand onClick={() => navigate("/")}>
+                            Bookcook
+                        </Navbar.Brand>
+                        <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`}/>
+                        <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
+                            <Offcanvas.Header closeButton>
+                                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
+                                    Bookcook
+                                </Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <Offcanvas.Body>
+                                <Nav className="justify-content-end flex-grow-1 pe-3">
+                                    {getBookcookListDropdown()}
+                                    <Nav.Link onClick={() => navigate("/recipeList")}>
+                                        Recepty
+                                    </Nav.Link>
+                                    <Nav.Link onClick={() => navigate("/ingredientList")}>
+                                        Ingredience
+                                    </Nav.Link>
+                                </Nav>
+                            </Offcanvas.Body>
+                        </Navbar.Offcanvas>
+                    </Container>
+                </Navbar>
+
+                <Outlet/>
+            </div>
+
+
+            {
+                //getChild()
+            }
         </>
     );
 }
