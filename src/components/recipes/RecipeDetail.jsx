@@ -1,9 +1,9 @@
 function RecipeDetail() {
     return (
 
-            <>
-                <div>TODO recipeDetail</div>
-            </>
+        <>
+            <div>TODO recipeDetail</div>
+        </>
 
     )
 }

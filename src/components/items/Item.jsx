@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button, Card} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import food from '../assets/21631.jpg';
-import './Recipe.css';
+import food from '../../assets/21631.jpg';
+import './Item.css';
 import Icon from '@mdi/react';
 import {mdiSilverwareForkKnife} from '@mdi/js';
+import {ItemTypeContext} from "../../context/ItemTypeContext";
+import {ITEM_TYPES} from "../../constants";
 
-function Recipe({recipe, ingredientList, isSmallDetail}) {
+function Item({recipe, ingredientList, isSmallDetail}) {
+
+    const {itemType} = useContext(ItemTypeContext);
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};
@@ -43,7 +47,7 @@ function Recipe({recipe, ingredientList, isSmallDetail}) {
                     <Icon path={mdiSilverwareForkKnife} size={1}/> {recipe.name}
                 </Card.Title>
 
-                {isSmallDetail && (
+                {isSmallDetail && itemType === ITEM_TYPES.RECIPE && (
                     <>
                         <Card.Text className="justify-text truncate-text">
                             {recipe.description}
@@ -59,10 +63,23 @@ function Recipe({recipe, ingredientList, isSmallDetail}) {
                     </>
                 )}
 
-                {!isSmallDetail && (
+                {!isSmallDetail && itemType === ITEM_TYPES.RECIPE && (
                     <Card.Text className="justify-text">
                         {truncateDescription(recipe.description, recipe.name)}
                     </Card.Text>
+                )}
+
+                {itemType === ITEM_TYPES.INGREDIENT && (
+                    <>
+
+                        <ul className="justify-text">
+                            {Object.values(ingredientNames).map((name, id) => (
+                                <li key={id}>{name}</li>
+                            ))}
+                        </ul>
+
+
+                    </>
                 )}
 
                 <Button variant="primary" className="center-button">Více o receptu</Button>
@@ -71,4 +88,4 @@ function Recipe({recipe, ingredientList, isSmallDetail}) {
     );
 }
 
-export default Recipe;
+export default Item;

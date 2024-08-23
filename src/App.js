@@ -1,13 +1,13 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RecipeList from "./components/RecipeList";
+import ItemList from "./components/items/ItemList";
 import {useEffect, useState} from "react";
 import {mdiAlertOctagonOutline, mdiLoading} from "@mdi/js";
 import Icon from "@mdi/react";
 import {Outlet, useNavigate} from "react-router-dom";
-import {Container, Nav, NavDropdown} from "react-bootstrap";
+import {Container, Nav, NavDropdown, Offcanvas} from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
-import { Offcanvas } from 'react-bootstrap';
+import {ItemTypeProvider} from "./context/ItemTypeContext";
 
 function App() {
     const [recipeLoadCall, setRecipeLoadCall] = useState({state: "pending"});
@@ -72,7 +72,7 @@ function App() {
             case "success":
                 return (
                     <>
-                        <RecipeList recipeList={recipeList} ingredientList={ingredientList}/>
+                        <ItemList recipeList={recipeList} ingredientList={ingredientList}/>
                         {/*odkaz kvuli pravum na obrazek*/}
                         <a href="http://www.freepik.com">Designed by macrovector / Freepik</a>
                     </>
@@ -96,15 +96,16 @@ function App() {
             case "pending":
                 return (
                     <Nav.Link disabled={true}>
-                        <Icon size={1} path={mdiLoading} spin={true} /> Classroom List
+                        <Icon size={1} path={mdiLoading} spin={true}/> Item List
                     </Nav.Link>
                 );
             case "success":
                 return (
-                    <NavDropdown title="Select Recipe" id="navbarScrollingDropdown">
+                    <NavDropdown title="Select Item" id="navbarScrollingDropdown">
                         {recipeLoadCall.data.map((recipe) => {
                             return (
                                 <NavDropdown.Item
+                                    key={recipe.id}
                                     onClick={() =>
                                         navigate("/recipeDetail?id=" + recipe.id)
                                     }
@@ -118,7 +119,7 @@ function App() {
             case "error":
                 return (
                     <div>
-                        <Icon size={1} path={mdiAlertOctagonOutline} /> Error
+                        <Icon size={1} path={mdiAlertOctagonOutline}/> Error
                     </div>
                 );
             default:
@@ -127,7 +128,7 @@ function App() {
     }
 
     return (
-        <>
+        <ItemTypeProvider>
 
 
             <div className="App">
@@ -151,7 +152,9 @@ function App() {
                             </Offcanvas.Header>
                             <Offcanvas.Body>
                                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                                    {getBookcookListDropdown()}
+                                    {
+                                        //getBookcookListDropdown()
+                                    }
                                     <Nav.Link onClick={() => navigate("/recipeList")}>
                                         Recepty
                                     </Nav.Link>
@@ -171,7 +174,7 @@ function App() {
             {
                 //getChild()
             }
-        </>
+        </ItemTypeProvider>
     );
 }
 

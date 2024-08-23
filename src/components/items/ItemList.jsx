@@ -1,5 +1,5 @@
-import React, {useMemo, useState} from 'react';
-import './RecipeList.css';
+import React, {useContext, useMemo, useState} from 'react';
+import './ItemList.css';
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import {
@@ -12,32 +12,50 @@ import {
     mdiViewGridOutline
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import RecipeGridList from "./RecipeGridList";
-import RecipeTableList from "./RecipeTableList";
+import ItemGridList from "./ItemGridList";
+import RecipeTableList from "./ItemTableList";
 import Form from "react-bootstrap/Form"
+import {ITEM_TYPES, LAYOUT_TYPES} from "../../constants";
+import {ItemTypeContext} from "../../context/ItemTypeContext";
 
-const GRID = "grid"
 
+function ItemList({recipeList, ingredientList}) {
 
-function RecipeList({recipeList, ingredientList}) {
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
-    const [viewType, setViewType] = useState(GRID)
+    const [viewType, setViewType] = useState(LAYOUT_TYPES.GRID)
     const [searchBy, setSearchBy] = useState("");
 
+    const {itemType} = useContext(ItemTypeContext);
 
-    const isGrid = viewType === GRID
+    // pro test
+    //itemType = ITEM_TYPES.INGREDIENT
 
-    const filteredRecipeList = useMemo(() => {
-        return recipeList.filter((item) => {
-            return (
-                item.name
-                    .toLocaleLowerCase()
-                    .includes(searchBy.toLocaleLowerCase()) ||
-                item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
-            );
-        });
+    const isGrid = viewType === LAYOUT_TYPES.GRID
+
+
+    const filteredItemList = useMemo(() => {
+
+        if (itemType === ITEM_TYPES.RECIPE) {
+            return recipeList.filter((item) => {
+                return (
+                    item.name
+                        .toLocaleLowerCase()
+                        .includes(searchBy.toLocaleLowerCase()) ||
+                    item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
+                );
+            });
+        } else if (itemType === ITEM_TYPES.INGREDIENT) {
+            return recipeList.filter((item) => {
+                return (
+                    item.name
+                        .toLocaleLowerCase()
+                        .includes(searchBy.toLocaleLowerCase())
+                );
+            });
+        }
+
     }, [searchBy, recipeList]);
 
 
@@ -50,13 +68,13 @@ function RecipeList({recipeList, ingredientList}) {
         if (!event.target.value) setSearchBy("");
     }
 
-
     return (
         <>
 
             <Navbar collapseOnSelect expand="sm" bg="light">
                 <div className="container-fluid">
-                    <Navbar.Brand>Seznam receptů</Navbar.Brand>
+                    {itemType === ITEM_TYPES.RECIPE && <Navbar.Brand>Seznam receptů</Navbar.Brand>}
+                    {itemType === ITEM_TYPES.INGREDIENT && <Navbar.Brand>Seznam ingrediencí</Navbar.Brand>}
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse style={{justifyContent: "right"}}>
 
@@ -80,7 +98,7 @@ function RecipeList({recipeList, ingredientList}) {
 
 
                         <div className="d-flex ms-auto">
-                            {isGrid && (
+                            {isGrid && itemType === ITEM_TYPES.RECIPE && (
                                 <div className="me-2">
                                     <Button
                                         className={"d-none d-md-block"}
@@ -132,13 +150,13 @@ function RecipeList({recipeList, ingredientList}) {
             </Navbar>
 
             <div>
-                {filteredRecipeList.length ? (
+                {filteredItemList.length ? (
                     isGrid ? (
-                        <RecipeGridList recipeList={filteredRecipeList} ingredientList={ingredientList}
-                                        isBiggerSpacing={isBiggerSpacing}
-                                        isSmallDetail={isSmallDetail}/>
+                        <ItemGridList recipeList={filteredItemList} ingredientList={ingredientList}
+                                      isBiggerSpacing={isBiggerSpacing}
+                                      isSmallDetail={isSmallDetail}/>
                     ) : (
-                        <RecipeTableList recipeList={filteredRecipeList}/>
+                        <RecipeTableList recipeList={filteredItemList} ingredientList={ingredientList}/>
                     )
                 ) : (
                     <div style={{margin: "16px auto", textAlign: "center"}}>
@@ -148,8 +166,6 @@ function RecipeList({recipeList, ingredientList}) {
             </div>
 
 
-
-
         </>
 
 
@@ -157,4 +173,4 @@ function RecipeList({recipeList, ingredientList}) {
 
 }
 
-export default RecipeList;
+export default ItemList;
