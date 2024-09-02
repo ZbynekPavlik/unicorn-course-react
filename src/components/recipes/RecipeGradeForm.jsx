@@ -1,5 +1,6 @@
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { useState } from "react";
+import axios from "axios";
 
 function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
     const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -78,12 +79,22 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
             }))
         };
 
-        // Log the JSON object to the console
-        console.log("Submitting recipe data:", recipeData);
+        try {
+            // Make POST request to the API to create the recipe
+            const response = await axios.post('http://localhost:3000/recipe/create', recipeData);
 
-        // Reset form validation state and close the modal after submission
-        setValidated(false);
-        handleClose();
+            // Check if the response status is either 200 (OK) or 201 (Created)
+            if (response.status === 200 || response.status === 201) {
+                console.log("Recipe successfully created:", response.data);
+                setValidated(false);
+                handleClose();
+            } else {
+                console.error("Failed to create recipe. Response:", response);
+            }
+        } catch (error) {
+            console.error("Error creating recipe:", error);
+        }
+
     };
 
     return (
