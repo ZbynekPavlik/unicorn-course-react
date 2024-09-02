@@ -7,7 +7,7 @@ import {
     mdiArrowExpandVertical,
     mdiMagnify,
     mdiMagnifyMinusOutline,
-    mdiMagnifyPlusOutline,
+    mdiMagnifyPlusOutline, mdiPlus,
     mdiTable,
     mdiViewGridOutline
 } from "@mdi/js";
@@ -17,6 +17,7 @@ import RecipeTableList from "./ItemTableList";
 import Form from "react-bootstrap/Form"
 import {ITEM_TYPES, LAYOUT_TYPES} from "../../constants";
 import {ItemTypeContext} from "../../context/ItemTypeContext";
+import RecipeGradeForm from "../recipes/RecipeGradeForm";
 
 
 function ItemList({recipeList, ingredientList}) {
@@ -26,6 +27,9 @@ function ItemList({recipeList, ingredientList}) {
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
     const [viewType, setViewType] = useState(LAYOUT_TYPES.GRID)
     const [searchBy, setSearchBy] = useState("");
+    const [addRecipeShow, setAddRecipeShow] = useState(false);
+
+    const handleAddRecipeShow = () => setAddRecipeShow(true);
 
     const {itemType} = useContext(ItemTypeContext);
 
@@ -128,6 +132,9 @@ function ItemList({recipeList, ingredientList}) {
                                     </Button>
                                 </div>
                             )}
+
+
+
                             <div className="me-2">
                                 <Button
                                     className={"d-none d-md-block"}
@@ -141,6 +148,20 @@ function ItemList({recipeList, ingredientList}) {
                                 </Button>
 
                             </div>
+
+                            {itemType === ITEM_TYPES.RECIPE &&
+                                <Button
+                                    style={{ float: "right" }}
+                                    variant="secondary"
+                                    class="btn btn-success btn-sm"
+                                    onClick={handleAddRecipeShow}
+                                >
+                                    <Icon path={mdiPlus} size={1} />
+                                    Přidat recept
+                                </Button>
+                            }
+
+
                         </div>
 
 
@@ -148,6 +169,15 @@ function ItemList({recipeList, ingredientList}) {
 
                 </div>
             </Navbar>
+
+
+            {addRecipeShow &&
+                <RecipeGradeForm
+                    ingredient={ingredientList}
+                    show={addRecipeShow}
+                    setAddRecipeShow={setAddRecipeShow}
+                />
+            }
 
             <div>
                 {filteredItemList.length ? (
