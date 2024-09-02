@@ -25,10 +25,6 @@ function Item({recipe, ingredientList, isSmallDetail}) {
 
     const ingredientNames = getIngredientNames(recipe.ingredients, ingredientList);
 
-    //console.log(ingredientNames)
-
-    //console.log(ingredientNames[0])
-
     const truncateDescription = (description, name) => {
         if (description.length > 180 && name.length > 38) {
             return description.slice(0, 180) + '...';
@@ -77,8 +73,6 @@ function Item({recipe, ingredientList, isSmallDetail}) {
                                 <li key={id}>{name}</li>
                             ))}
                         </ul>
-
-
                     </>
                 )}
 
