@@ -22,63 +22,46 @@ import {AlertContext} from "../../context/AlertContext";
 import {Alert} from "react-bootstrap";
 
 
-function ItemList({recipeList, ingredientList}) {
+function ItemList({recipeList, ingredientList, reloadRecipes }) {
 
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
-    const [isBiggerSpacing, setIsBiggerSpacing] = useState(false)
-    const [viewType, setViewType] = useState(LAYOUT_TYPES.GRID)
+    const [isBiggerSpacing, setIsBiggerSpacing] = useState(false);
+    const [viewType, setViewType] = useState(LAYOUT_TYPES.GRID);
     const [searchBy, setSearchBy] = useState("");
     const [addRecipeShow, setAddRecipeShow] = useState(false);
 
     const { alertMessage, setAlertMessage, showAlert, setShowAlert } = useContext(AlertContext);
-    const {itemType} = useContext(ItemTypeContext);
-
+    const { itemType } = useContext(ItemTypeContext);
 
     const handleAddRecipeShow = () => setAddRecipeShow(true);
 
-
-    // useEffect to auto-dismiss alert after 10 seconds
     useEffect(() => {
         if (showAlert) {
             const timer = setTimeout(() => {
-                setShowAlert(false); // Hide alert after 10 seconds
-            }, 10000); // 10000 milliseconds = 10 seconds
+                setShowAlert(false);
+            }, 10000);
 
-            // Cleanup function to clear the timer if the component is unmounted
             return () => clearTimeout(timer);
         }
     }, [showAlert]);
 
-    // pro test
-    //itemType = ITEM_TYPES.INGREDIENT
-
-    const isGrid = viewType === LAYOUT_TYPES.GRID
-
+    const isGrid = viewType === LAYOUT_TYPES.GRID;
 
     const filteredItemList = useMemo(() => {
-
         if (itemType === ITEM_TYPES.RECIPE) {
             return recipeList.filter((item) => {
                 return (
-                    item.name
-                        .toLocaleLowerCase()
-                        .includes(searchBy.toLocaleLowerCase()) ||
+                    item.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()) ||
                     item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
                 );
             });
         } else if (itemType === ITEM_TYPES.INGREDIENT) {
             return recipeList.filter((item) => {
-                return (
-                    item.name
-                        .toLocaleLowerCase()
-                        .includes(searchBy.toLocaleLowerCase())
-                );
+                return item.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase());
             });
         }
-
     }, [searchBy, recipeList]);
-
 
     function handleSearch(event) {
         event.preventDefault();
@@ -203,13 +186,14 @@ function ItemList({recipeList, ingredientList}) {
             )}
 
 
-            {addRecipeShow &&
+            {addRecipeShow && (
                 <RecipeGradeForm
                     ingredientList={ingredientList}
                     show={addRecipeShow}
                     setAddRecipeShow={setAddRecipeShow}
+                    reloadRecipes={reloadRecipes}  // Pass the callback to RecipeGradeForm
                 />
-            }
+            )}
 
             <div>
                 {filteredItemList.length ? (

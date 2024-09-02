@@ -5,7 +5,7 @@ import { useContext } from "react";
 import {AlertContext} from "../../context/AlertContext";
 
 
-function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
+function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes }) {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -19,9 +19,9 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
         ]
     });
 
-    const [validated, setValidated] = useState(false); // State to track form validation
+    const [validated, setValidated] = useState(false);
 
-    const { setAlertMessage, setShowAlert } = useContext(AlertContext); // Use the context
+    const { setAlertMessage, setShowAlert } = useContext(AlertContext);
 
     const handleClose = () => setAddRecipeShow(false);
 
@@ -65,45 +65,43 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
         e.preventDefault();
         e.stopPropagation();
 
-        // Check if form is valid
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
-            setValidated(true); // Set validated to true to show validation feedback
-            return; // Stop submission if form is invalid
+            setValidated(true);
+            return;
         }
 
-        // Prepare the data in the required JSON format
         const recipeData = {
             name: formData.name,
             description: formData.description,
             imgUri: formData.imgUri,
             ingredients: formData.ingredients.map((ingredient) => ({
                 id: ingredient.id,
-                amount: parseFloat(ingredient.amount), // Ensure amount is a number
+                amount: parseFloat(ingredient.amount),
                 unit: ingredient.unit
             }))
         };
 
         try {
-            // Make POST request to the API to create the recipe
             const response = await axios.post('http://localhost:3000/recipe/create', recipeData);
 
-            // Check if the response status is either 200 (OK) or 201 (Created)
             if (response.status === 200 || response.status === 201) {
                 console.log("Recipe successfully created:", response.data);
-                setAlertMessage("Recipe successfully created!"); // Set success message
-                setShowAlert(true); // Show alert
+                setAlertMessage("Recept byl úspěšně vytvořen!");
+                setShowAlert(true);
                 setValidated(false);
                 handleClose();
+
+                reloadRecipes(); // Call reloadRecipes after successful recipe creation
             } else {
                 console.error("Failed to create recipe. Response:", response);
-                setAlertMessage("Failed to create recipe."); // Set failure message
-                setShowAlert(true); // Show alert
+                setAlertMessage("Recept se nepodařilo vytvořit. Více informací v konzoli prohlížeče.");
+                setShowAlert(true);
             }
         } catch (error) {
             console.error("Error creating recipe:", error);
-            setAlertMessage("An error occurred while creating the recipe."); // Set error message
-            setShowAlert(true); // Show alert
+            setAlertMessage("Při vytváření receptu došlo k chybě. Více informací v konzoli prohlížeče.");
+            setShowAlert(true);
         }
     };
 
@@ -153,8 +151,8 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                             <thead>
                             <tr>
                                 <th style={{ width: "65%" }}>Ingredience</th>
-                                <th style={{ width: "18%" }}>Množství</th>
-                                <th style={{ width: "7%" }}>Jednotka</th>
+                                <th style={{ width: "15%" }}>Množství</th>
+                                <th style={{ width: "10%" }}>Jednotka</th>
                                 <th style={{ width: "10%" }}>Akce</th>
                             </tr>
                             </thead>
