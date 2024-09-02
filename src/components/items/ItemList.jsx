@@ -153,7 +153,7 @@ function ItemList({recipeList, ingredientList}) {
                                 <Button
                                     style={{ float: "right" }}
                                     variant="secondary"
-                                    class="btn btn-success btn-sm"
+                                    className="btn btn-success btn-sm"
                                     onClick={handleAddRecipeShow}
                                 >
                                     <Icon path={mdiPlus} size={1} />
@@ -173,7 +173,7 @@ function ItemList({recipeList, ingredientList}) {
 
             {addRecipeShow &&
                 <RecipeGradeForm
-                    ingredient={ingredientList}
+                    ingredientList={ingredientList}
                     show={addRecipeShow}
                     setAddRecipeShow={setAddRecipeShow}
                 />
