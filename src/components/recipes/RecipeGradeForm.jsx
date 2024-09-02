@@ -56,6 +56,7 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
     // Updated handleSubmit function to process data for the server API
     const handleSubmit = (e) => {
         e.preventDefault();
+        e.stopPropagation();
 
         // Prepare the data in the required JSON format
         const recipeData = {
