@@ -53,10 +53,28 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
         });
     };
 
+    // Updated handleSubmit function to process data for the server API
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log(formData);
+
+        // Prepare the data in the required JSON format
+        const recipeData = {
+            name: formData.name,
+            description: formData.description,
+            imgUri: formData.imgUri,
+            ingredients: formData.ingredients.map(ingredient => ({
+                id: ingredient.id,
+                amount: parseFloat(ingredient.amount), // Ensure amount is a number
+                unit: ingredient.unit
+            }))
+        };
+
+        // Log the JSON object to the console
+        console.log("Submitting recipe data:", recipeData);
+
+
+        // Close the modal after submission
+        handleClose();
     };
 
     return (
@@ -111,6 +129,10 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                 value={ingredient.id}
                                                 onChange={(e) => handleIngredientChange(index, e)}
                                             >
+                                                {/* Default option prompting the user to select an ingredient */}
+                                                <option value="" disabled>
+                                                    Vyberte ingredienci
+                                                </option>
                                                 {ingredientList.length > 0 ? (
                                                     ingredientList.map((ing) => (
                                                         <option key={ing.id} value={ing.id}>
@@ -122,6 +144,7 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                 )}
                                             </Form.Control>
                                         </Form.Group>
+
                                     </td>
                                     <td>
                                         <Form.Group controlId={`formIngredientAmount${index}`}>
