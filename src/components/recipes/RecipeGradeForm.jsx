@@ -1,7 +1,7 @@
-import {Button, Form, Modal, Table} from "react-bootstrap";
-import {useState} from "react";
+import { Button, Form, Modal, Table } from "react-bootstrap";
+import { useState } from "react";
 
-function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
+function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -15,10 +15,12 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
         ]
     });
 
+    const [validated, setValidated] = useState(false);  // State to track form validation
+
     const handleClose = () => setAddRecipeShow(false);
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
             [name]: value
@@ -26,7 +28,7 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
     };
 
     const handleIngredientChange = (index, e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         const newIngredients = [...formData.ingredients];
         newIngredients[index][name] = value;
         setFormData({
@@ -40,7 +42,7 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
             ...formData,
             ingredients: [
                 ...formData.ingredients,
-                {id: "", amount: 0, unit: ""}
+                { id: "", amount: 0, unit: "" }
             ]
         });
     };
@@ -53,17 +55,23 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
         });
     };
 
-    // Updated handleSubmit function to process data for the server API
     const handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        // Check if form is valid
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            setValidated(true);  // Set validated to true to show validation feedback
+            return;  // Stop submission if form is invalid
+        }
 
         // Prepare the data in the required JSON format
         const recipeData = {
             name: formData.name,
             description: formData.description,
             imgUri: formData.imgUri,
-            ingredients: formData.ingredients.map(ingredient => ({
+            ingredients: formData.ingredients.map((ingredient) => ({
                 id: ingredient.id,
                 amount: parseFloat(ingredient.amount), // Ensure amount is a number
                 unit: ingredient.unit
@@ -73,8 +81,8 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
         // Log the JSON object to the console
         console.log("Submitting recipe data:", recipeData);
 
-
-        // Close the modal after submission
+        // Reset form validation state and close the modal after submission
+        setValidated(false);
         handleClose();
     };
 
@@ -86,7 +94,8 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                     <Modal.Title>Přidat nový recept</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
+                    {/* Add noValidate to disable native HTML validation and manage it manually */}
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <Form.Group controlId="formRecipeName">
                             <Form.Label>Název receptu</Form.Label>
                             <Form.Control
@@ -94,8 +103,11 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                required
+                                required  // HTML Validator: required
                             />
+                            <Form.Control.Feedback type="invalid">
+                                Název receptu je povinný.
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formRecipeDescription">
                             <Form.Label>Postup receptu</Form.Label>
@@ -105,18 +117,22 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 rows={3}
+                                maxLength={800}  // HTML Validator: maxLength
+                                required
                             />
+                            <Form.Control.Feedback type="invalid">
+                                Zadejte popis s maximální délkou 800 znaků.
+                            </Form.Control.Feedback>
                         </Form.Group>
-
 
                         <Form.Label>Ingredience</Form.Label>
                         <Table bordered>
                             <thead>
                             <tr>
-                                <th style={{width: '65%'}}>Ingredience</th>
-                                <th style={{width: '18%'}}>Množství</th>
-                                <th style={{width: '7%'}}>Jednotka</th>
-                                <th style={{width: '10%'}}>Akce</th>
+                                <th style={{ width: "65%" }}>Ingredience</th>
+                                <th style={{ width: "18%" }}>Množství</th>
+                                <th style={{ width: "7%" }}>Jednotka</th>
+                                <th style={{ width: "10%" }}>Akce</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -129,6 +145,7 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                 name="id"
                                                 value={ingredient.id}
                                                 onChange={(e) => handleIngredientChange(index, e)}
+                                                required  // HTML Validator: required
                                             >
                                                 {/* Default option prompting the user to select an ingredient */}
                                                 <option value="" disabled>
@@ -141,11 +158,15 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                         </option>
                                                     ))
                                                 ) : (
-                                                    <option value="">Žádné ingredience nejsou dostupné</option>
+                                                    <option value="">
+                                                        Žádné ingredience nejsou dostupné
+                                                    </option>
                                                 )}
                                             </Form.Control>
+                                            <Form.Control.Feedback type="invalid">
+                                                Vyberte ingredienci.
+                                            </Form.Control.Feedback>
                                         </Form.Group>
-
                                     </td>
                                     <td>
                                         <Form.Group controlId={`formIngredientAmount${index}`}>
@@ -154,7 +175,13 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                 name="amount"
                                                 value={ingredient.amount}
                                                 onChange={(e) => handleIngredientChange(index, e)}
+                                                min={1}   // HTML Validator: min
+                                                max={1000}  // HTML Validator: max
+                                                required    // HTML Validator: required
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                Zadejte množství mezi 1 a 1000.
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </td>
                                     <td>
@@ -164,7 +191,12 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                                                 name="unit"
                                                 value={ingredient.unit}
                                                 onChange={(e) => handleIngredientChange(index, e)}
+                                                maxLength={10}
+                                                required  // HTML Validator: required
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                                Zadejte jednotku o maximální délce 10 znaků.
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </td>
                                     <td>
@@ -179,7 +211,6 @@ function RecipeGradeForm({ingredientList, show, setAddRecipeShow}) {
                         <Button variant="primary" onClick={addIngredient} className="mb-3">
                             Přidat další ingredienci
                         </Button>
-
 
                         <Modal.Footer>
                             <Button variant="secondary" onClick={handleClose}>
