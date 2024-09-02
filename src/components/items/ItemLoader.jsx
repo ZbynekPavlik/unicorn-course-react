@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Icon from "@mdi/react";
-import { mdiLoading } from "@mdi/js";
+import {mdiLoading} from "@mdi/js";
 import ItemList from "./ItemList";
 
 function ItemLoader() {
-    const [recipeLoadCall, setRecipeLoadCall] = useState({ state: "pending" });
+    const [recipeLoadCall, setRecipeLoadCall] = useState({state: "pending"});
     const [recipeList, setRecipeList] = useState([]);
-    const [ingredientLoadCall, setIngredientLoadCall] = useState({ state: "pending" });
+    const [ingredientLoadCall, setIngredientLoadCall] = useState({state: "pending"});
     const [ingredientList, setIngredientList] = useState([]);
 
     const loadRecipes = () => {
@@ -16,15 +16,15 @@ function ItemLoader() {
             .then(async (response) => {
                 const responseJson = await response.json();
                 if (response.status >= 400) {
-                    setRecipeLoadCall({ state: "error", error: responseJson });
+                    setRecipeLoadCall({state: "error", error: responseJson});
                 } else {
-                    setRecipeLoadCall({ state: "success", data: responseJson });
+                    setRecipeLoadCall({state: "success", data: responseJson});
                     setRecipeList(responseJson);
                 }
             })
             .catch((error) => {
                 console.error("Error fetching recipe list:", error);
-                setRecipeLoadCall({ state: "error", error });
+                setRecipeLoadCall({state: "error", error});
             });
     };
 
@@ -39,15 +39,15 @@ function ItemLoader() {
             .then(async (response) => {
                 const responseJson = await response.json();
                 if (response.status >= 400) {
-                    setIngredientLoadCall({ state: "error", error: responseJson });
+                    setIngredientLoadCall({state: "error", error: responseJson});
                 } else {
-                    setIngredientLoadCall({ state: "success", data: responseJson });
+                    setIngredientLoadCall({state: "success", data: responseJson});
                     setIngredientList(responseJson);
                 }
             })
             .catch((error) => {
                 console.error("Error fetching ingredient list:", error);
-                setIngredientLoadCall({ state: "error", error });
+                setIngredientLoadCall({state: "error", error});
             });
     }, []);
 
@@ -65,13 +65,13 @@ function ItemLoader() {
             case "pending":
                 return (
                     <div className="loading">
-                        <Icon size={2} path={mdiLoading} spin={true} />
+                        <Icon size={2} path={mdiLoading} spin={true}/>
                     </div>
                 );
             case "success":
                 return (
                     <>
-                        <ItemList recipeList={recipeList} ingredientList={ingredientList} reloadRecipes={loadRecipes} />
+                        <ItemList recipeList={recipeList} ingredientList={ingredientList} reloadRecipes={loadRecipes}/>
                         {/*odkaz kvuli pravum na obrazek*/}
                         <a href="http://www.freepik.com">Designed by macrovector / Freepik</a>
                     </>
@@ -80,7 +80,7 @@ function ItemLoader() {
                 return (
                     <div className="error">
                         <div>Nepodařilo se načíst data o třídě.</div>
-                        <br />
+                        <br/>
                         <pre>{JSON.stringify(recipeLoadCall.error, null, 2)}</pre>
                     </div>
                 );

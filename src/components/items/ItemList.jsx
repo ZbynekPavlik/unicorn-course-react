@@ -7,7 +7,8 @@ import {
     mdiArrowExpandVertical,
     mdiMagnify,
     mdiMagnifyMinusOutline,
-    mdiMagnifyPlusOutline, mdiPlus,
+    mdiMagnifyPlusOutline,
+    mdiPlus,
     mdiTable,
     mdiViewGridOutline
 } from "@mdi/js";
@@ -22,7 +23,7 @@ import {AlertContext} from "../../context/AlertContext";
 import {Alert} from "react-bootstrap";
 
 
-function ItemList({recipeList, ingredientList, reloadRecipes }) {
+function ItemList({recipeList, ingredientList, reloadRecipes}) {
 
 
     const [isSmallDetail, setIsSmallDetail] = useState(false);
@@ -31,8 +32,8 @@ function ItemList({recipeList, ingredientList, reloadRecipes }) {
     const [searchBy, setSearchBy] = useState("");
     const [addRecipeShow, setAddRecipeShow] = useState(false);
 
-    const { alertMessage, setAlertMessage, showAlert, setShowAlert } = useContext(AlertContext);
-    const { itemType } = useContext(ItemTypeContext);
+    const {alertMessage, setAlertMessage, showAlert, setShowAlert} = useContext(AlertContext);
+    const {itemType} = useContext(ItemTypeContext);
 
     const handleAddRecipeShow = () => setAddRecipeShow(true);
 
@@ -74,7 +75,6 @@ function ItemList({recipeList, ingredientList, reloadRecipes }) {
 
     return (
         <>
-
 
 
             <Navbar collapseOnSelect expand="sm" bg="light">
@@ -136,7 +136,6 @@ function ItemList({recipeList, ingredientList, reloadRecipes }) {
                             )}
 
 
-
                             <div className="me-2">
                                 <Button
                                     className={"d-none d-md-block"}
@@ -153,12 +152,12 @@ function ItemList({recipeList, ingredientList, reloadRecipes }) {
 
                             {itemType === ITEM_TYPES.RECIPE &&
                                 <Button
-                                    style={{ float: "right" }}
+                                    style={{float: "right"}}
                                     variant="secondary"
                                     className="btn btn-success btn-sm"
                                     onClick={handleAddRecipeShow}
                                 >
-                                    <Icon path={mdiPlus} size={1} />
+                                    <Icon path={mdiPlus} size={1}/>
                                     Přidat recept
                                 </Button>
                             }

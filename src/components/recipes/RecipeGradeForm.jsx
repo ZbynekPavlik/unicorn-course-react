@@ -1,11 +1,10 @@
-import { Button, Form, Modal, Table, Alert } from "react-bootstrap"; // Import Alert component
-import { useState } from "react";
+import {Button, Form, Modal, Table} from "react-bootstrap"; // Import Alert component
+import {useContext, useState} from "react";
 import axios from "axios";
-import { useContext } from "react";
 import {AlertContext} from "../../context/AlertContext";
 
 
-function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes }) {
+function RecipeGradeForm({ingredientList, show, setAddRecipeShow, reloadRecipes}) {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -21,12 +20,12 @@ function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipe
 
     const [validated, setValidated] = useState(false);
 
-    const { setAlertMessage, setShowAlert } = useContext(AlertContext);
+    const {setAlertMessage, setShowAlert} = useContext(AlertContext);
 
     const handleClose = () => setAddRecipeShow(false);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData({
             ...formData,
             [name]: value
@@ -34,7 +33,7 @@ function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipe
     };
 
     const handleIngredientChange = (index, e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         const newIngredients = [...formData.ingredients];
         newIngredients[index][name] = value;
         setFormData({
@@ -48,7 +47,7 @@ function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipe
             ...formData,
             ingredients: [
                 ...formData.ingredients,
-                { id: "", amount: 0, unit: "" }
+                {id: "", amount: 0, unit: ""}
             ]
         });
     };
@@ -150,10 +149,10 @@ function  RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipe
                         <Table bordered>
                             <thead>
                             <tr>
-                                <th style={{ width: "65%" }}>Ingredience</th>
-                                <th style={{ width: "15%" }}>Množství</th>
-                                <th style={{ width: "10%" }}>Jednotka</th>
-                                <th style={{ width: "10%" }}>Akce</th>
+                                <th style={{width: "65%"}}>Ingredience</th>
+                                <th style={{width: "15%"}}>Množství</th>
+                                <th style={{width: "10%"}}>Jednotka</th>
+                                <th style={{width: "10%"}}>Akce</th>
                             </tr>
                             </thead>
                             <tbody>
