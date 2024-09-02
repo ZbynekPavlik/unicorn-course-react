@@ -1,6 +1,9 @@
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Button, Form, Modal, Table, Alert } from "react-bootstrap"; // Import Alert component
 import { useState } from "react";
 import axios from "axios";
+import { useContext } from "react";
+import {AlertContext} from "../../context/AlertContext";
+
 
 function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
     const [formData, setFormData] = useState({
@@ -16,7 +19,9 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
         ]
     });
 
-    const [validated, setValidated] = useState(false);  // State to track form validation
+    const [validated, setValidated] = useState(false); // State to track form validation
+
+    const { setAlertMessage, setShowAlert } = useContext(AlertContext); // Use the context
 
     const handleClose = () => setAddRecipeShow(false);
 
@@ -63,8 +68,8 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
         // Check if form is valid
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
-            setValidated(true);  // Set validated to true to show validation feedback
-            return;  // Stop submission if form is invalid
+            setValidated(true); // Set validated to true to show validation feedback
+            return; // Stop submission if form is invalid
         }
 
         // Prepare the data in the required JSON format
@@ -86,19 +91,26 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
             // Check if the response status is either 200 (OK) or 201 (Created)
             if (response.status === 200 || response.status === 201) {
                 console.log("Recipe successfully created:", response.data);
+                setAlertMessage("Recipe successfully created!"); // Set success message
+                setShowAlert(true); // Show alert
                 setValidated(false);
                 handleClose();
             } else {
                 console.error("Failed to create recipe. Response:", response);
+                setAlertMessage("Failed to create recipe."); // Set failure message
+                setShowAlert(true); // Show alert
             }
         } catch (error) {
             console.error("Error creating recipe:", error);
+            setAlertMessage("An error occurred while creating the recipe."); // Set error message
+            setShowAlert(true); // Show alert
         }
-
     };
 
     return (
         <>
+
+
             {/* Set a custom width for the modal */}
             <Modal show={show} onHide={handleClose} dialogClassName="wide-modal">
                 <Modal.Header closeButton>
@@ -114,7 +126,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                required  // HTML Validator: required
+                                required // HTML Validator: required
                             />
                             <Form.Control.Feedback type="invalid">
                                 Název receptu je povinný.
@@ -128,7 +140,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 rows={3}
-                                maxLength={800}  // HTML Validator: maxLength
+                                maxLength={800} // HTML Validator: maxLength
                                 required
                             />
                             <Form.Control.Feedback type="invalid">
@@ -156,7 +168,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                                                 name="id"
                                                 value={ingredient.id}
                                                 onChange={(e) => handleIngredientChange(index, e)}
-                                                required  // HTML Validator: required
+                                                required // HTML Validator: required
                                             >
                                                 {/* Default option prompting the user to select an ingredient */}
                                                 <option value="" disabled>
@@ -186,9 +198,9 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                                                 name="amount"
                                                 value={ingredient.amount}
                                                 onChange={(e) => handleIngredientChange(index, e)}
-                                                min={1}   // HTML Validator: min
-                                                max={1000}  // HTML Validator: max
-                                                required    // HTML Validator: required
+                                                min={1} // HTML Validator: min
+                                                max={1000} // HTML Validator: max
+                                                required // HTML Validator: required
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 Zadejte množství mezi 1 a 1000.
@@ -203,7 +215,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow }) {
                                                 value={ingredient.unit}
                                                 onChange={(e) => handleIngredientChange(index, e)}
                                                 maxLength={10}
-                                                required  // HTML Validator: required
+                                                required // HTML Validator: required
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 Zadejte jednotku o maximální délce 10 znaků.

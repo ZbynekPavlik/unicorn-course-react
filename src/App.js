@@ -8,6 +8,7 @@ import {Outlet, useNavigate} from "react-router-dom";
 import {Container, Nav, NavDropdown, Offcanvas} from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import {ItemTypeProvider} from "./context/ItemTypeContext";
+import {AlertProvider} from "./context/AlertContext";
 
 function App() {
     const [recipeLoadCall, setRecipeLoadCall] = useState({state: "pending"});
@@ -128,6 +129,7 @@ function App() {
     }
 
     return (
+        <AlertProvider>
         <ItemTypeProvider>
 
 
@@ -175,6 +177,7 @@ function App() {
                 //getChild()
             }
         </ItemTypeProvider>
+        </AlertProvider>
     );
 }
 

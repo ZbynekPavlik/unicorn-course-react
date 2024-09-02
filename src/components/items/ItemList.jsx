@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import './ItemList.css';
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
@@ -18,6 +18,8 @@ import Form from "react-bootstrap/Form"
 import {ITEM_TYPES, LAYOUT_TYPES} from "../../constants";
 import {ItemTypeContext} from "../../context/ItemTypeContext";
 import RecipeGradeForm from "../recipes/RecipeGradeForm";
+import {AlertContext} from "../../context/AlertContext";
+import {Alert} from "react-bootstrap";
 
 
 function ItemList({recipeList, ingredientList}) {
@@ -29,9 +31,24 @@ function ItemList({recipeList, ingredientList}) {
     const [searchBy, setSearchBy] = useState("");
     const [addRecipeShow, setAddRecipeShow] = useState(false);
 
+    const { alertMessage, setAlertMessage, showAlert, setShowAlert } = useContext(AlertContext);
+    const {itemType} = useContext(ItemTypeContext);
+
+
     const handleAddRecipeShow = () => setAddRecipeShow(true);
 
-    const {itemType} = useContext(ItemTypeContext);
+
+    // useEffect to auto-dismiss alert after 10 seconds
+    useEffect(() => {
+        if (showAlert) {
+            const timer = setTimeout(() => {
+                setShowAlert(false); // Hide alert after 10 seconds
+            }, 10000); // 10000 milliseconds = 10 seconds
+
+            // Cleanup function to clear the timer if the component is unmounted
+            return () => clearTimeout(timer);
+        }
+    }, [showAlert]);
 
     // pro test
     //itemType = ITEM_TYPES.INGREDIENT
@@ -74,6 +91,8 @@ function ItemList({recipeList, ingredientList}) {
 
     return (
         <>
+
+
 
             <Navbar collapseOnSelect expand="sm" bg="light">
                 <div className="container-fluid">
@@ -169,6 +188,19 @@ function ItemList({recipeList, ingredientList}) {
 
                 </div>
             </Navbar>
+
+
+            {/* Alert component to display the message */}
+            {showAlert && (
+                <Alert
+                    variant="info"
+                    onClose={() => setShowAlert(false)} // Hide alert on close
+                    dismissible
+                    className="text-center" // React Bootstrap utility class to center-align text
+                >
+                    {alertMessage}
+                </Alert>
+            )}
 
 
             {addRecipeShow &&
