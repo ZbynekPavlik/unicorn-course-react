@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
-import { Button, Card } from 'react-bootstrap';
+import React, {useContext} from 'react';
+import {Button, Card} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import food from '../../assets/21631.jpg'; // Přizpůsobte cestu k obrázku
 import './Item.css';
 import Icon from '@mdi/react';
-import { mdiSilverwareForkKnife, mdiPencil } from '@mdi/js'; // Import ikony pro tlačítko úpravy
-import { ItemTypeContext } from '../../context/ItemTypeContext';
-import { ITEM_TYPES } from '../../constants';
+import {mdiPencil, mdiSilverwareForkKnife} from '@mdi/js'; // Import ikony pro tlačítko úpravy
+import {ItemTypeContext} from '../../context/ItemTypeContext';
+import {ITEM_TYPES} from '../../constants';
 
-function Item({ recipe, ingredientList, isSmallDetail, onEdit }) {
-    const { itemType } = useContext(ItemTypeContext);
+function Item({recipe, ingredientList, isSmallDetail, onEdit}) {
+    const {itemType} = useContext(ItemTypeContext);
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};
@@ -36,10 +36,11 @@ function Item({ recipe, ingredientList, isSmallDetail, onEdit }) {
 
     return (
         <Card>
-            <Card.Img variant="top" src={food} alt="Obrázek receptu" /> {/* Předpokládám, že obrázek je stejný pro všechny recepty */}
+            <Card.Img variant="top" src={food}
+                      alt="Obrázek receptu"/> {/* Předpokládám, že obrázek je stejný pro všechny recepty */}
             <Card.Body>
                 <Card.Title className="center-text">
-                    <Icon path={mdiSilverwareForkKnife} size={1} /> {recipe.name}
+                    <Icon path={mdiSilverwareForkKnife} size={1}/> {recipe.name}
                 </Card.Title>
 
                 {isSmallDetail && itemType === ITEM_TYPES.RECIPE && (
@@ -75,7 +76,7 @@ function Item({ recipe, ingredientList, isSmallDetail, onEdit }) {
                 </Button>
                 {/* Přidání tlačítka pro úpravu */}
                 <Button variant="secondary" className="mt-2 center-button" onClick={() => onEdit(recipe)}>
-                    <Icon path={mdiPencil} size={1} /> Upravit
+                    <Icon path={mdiPencil} size={1}/> Upravit
                 </Button>
             </Card.Body>
         </Card>

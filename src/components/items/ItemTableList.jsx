@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import Table from "react-bootstrap/Table";
-import { Container, Button } from "react-bootstrap";
-import { ItemTypeContext } from "../../context/ItemTypeContext";
-import { ITEM_TYPES } from "../../constants";
+import {Button, Container} from "react-bootstrap";
+import {ItemTypeContext} from "../../context/ItemTypeContext";
+import {ITEM_TYPES} from "../../constants";
 
-function ItemTableList({ recipeList, ingredientList, onEdit }) { // Add onEdit prop
+function ItemTableList({recipeList, ingredientList, onEdit}) { // Add onEdit prop
 
-    const { itemType } = useContext(ItemTypeContext);
+    const {itemType} = useContext(ItemTypeContext);
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};

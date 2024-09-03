@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import './ItemList.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -17,12 +17,12 @@ import {
 import Icon from '@mdi/react';
 import ItemGridList from './ItemGridList';
 import RecipeTableList from './ItemTableList';
-import { ITEM_TYPES, LAYOUT_TYPES } from '../../constants';
-import { ItemTypeContext } from '../../context/ItemTypeContext';
+import {ITEM_TYPES, LAYOUT_TYPES} from '../../constants';
+import {ItemTypeContext} from '../../context/ItemTypeContext';
 import RecipeGradeForm from '../recipes/RecipeGradeForm';
-import { AlertContext } from '../../context/AlertContext';
+import {AlertContext} from '../../context/AlertContext';
 
-function ItemList({ recipeList, ingredientList, reloadRecipes }) {
+function ItemList({recipeList, ingredientList, reloadRecipes}) {
     const [isSmallDetail, setIsSmallDetail] = useState(false);
     const [isBiggerSpacing, setIsBiggerSpacing] = useState(false);
     const [viewType, setViewType] = useState(LAYOUT_TYPES.GRID);
@@ -30,8 +30,8 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
     const [addRecipeShow, setAddRecipeShow] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
 
-    const { alertMessage, setAlertMessage, showAlert, setShowAlert } = useContext(AlertContext);
-    const { itemType } = useContext(ItemTypeContext);
+    const {alertMessage, setAlertMessage, showAlert, setShowAlert} = useContext(AlertContext);
+    const {itemType} = useContext(ItemTypeContext);
 
     const handleAddRecipeShow = () => {
         setSelectedRecipe(null); // Ensure we are adding a new recipe
@@ -87,23 +87,23 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                         {itemType === ITEM_TYPES.RECIPE && 'Seznam receptů'}
                         {itemType === ITEM_TYPES.INGREDIENT && 'Seznam ingrediencí'}
                     </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse style={{ justifyContent: 'right' }}>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+                    <Navbar.Collapse style={{justifyContent: 'right'}}>
                         <Form className="d-flex" onSubmit={handleSearch}>
                             <Form.Control
                                 id="searchInput"
-                                style={{ maxWidth: '500px' }}
+                                style={{maxWidth: '500px'}}
                                 type="search"
                                 placeholder="Search..."
                                 aria-label="Search"
                                 onChange={handleSearchDelete}
                             />
                             <Button
-                                style={{ marginRight: '8px' }}
+                                style={{marginRight: '8px'}}
                                 variant="outline-success"
                                 type="submit"
                             >
-                                <Icon size={1} path={mdiMagnify} />
+                                <Icon size={1} path={mdiMagnify}/>
                             </Button>
                         </Form>
 
@@ -115,7 +115,8 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                                         variant="outline-primary"
                                         onClick={() => setIsSmallDetail((currentState) => !currentState)}
                                     >
-                                        <Icon size={1} path={isSmallDetail ? mdiMagnifyPlusOutline : mdiMagnifyMinusOutline} /> {isSmallDetail ? 'Více textu' : 'Méně textu'}
+                                        <Icon size={1}
+                                              path={isSmallDetail ? mdiMagnifyPlusOutline : mdiMagnifyMinusOutline}/> {isSmallDetail ? 'Více textu' : 'Méně textu'}
                                     </Button>
                                 </div>
                             )}
@@ -125,7 +126,8 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                                         variant="outline-primary"
                                         onClick={() => setIsBiggerSpacing((currentState) => !currentState)}
                                     >
-                                        <Icon size={1} path={isBiggerSpacing ? mdiArrowCollapseVertical : mdiArrowExpandVertical} /> {isBiggerSpacing ? 'Zmenšit odsazení' : 'Zvětšit odsazení'}
+                                        <Icon size={1}
+                                              path={isBiggerSpacing ? mdiArrowCollapseVertical : mdiArrowExpandVertical}/> {isBiggerSpacing ? 'Zmenšit odsazení' : 'Zvětšit odsazení'}
                                     </Button>
                                 </div>
                             )}
@@ -136,24 +138,24 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                                     variant="outline-primary"
                                     onClick={() => setViewType((currentState) => (currentState === LAYOUT_TYPES.GRID ? LAYOUT_TYPES.TABLE : LAYOUT_TYPES.GRID))}
                                 >
-                                    <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline} /> {isGrid ? 'Tabulka' : 'Grid'}
+                                    <Icon size={1}
+                                          path={isGrid ? mdiTable : mdiViewGridOutline}/> {isGrid ? 'Tabulka' : 'Grid'}
                                 </Button>
                             </div>
 
                             {itemType === ITEM_TYPES.RECIPE && (
                                 <Button
-                                    style={{ float: 'right' }}
+                                    style={{float: 'right'}}
                                     variant="secondary"
                                     className="btn btn-success btn-sm"
                                     onClick={handleAddRecipeShow}
                                 >
-                                    <Icon path={mdiPlus} size={1} /> Přidat recept
+                                    <Icon path={mdiPlus} size={1}/> Přidat recept
                                 </Button>
                             )}
                         </div>
                     </Navbar.Collapse>
                 </div>
-
 
 
             </Navbar>
@@ -169,7 +171,6 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                     {alertMessage}
                 </Alert>
             )}
-
 
 
             {addRecipeShow && (
@@ -200,7 +201,7 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                         />
                     )
                 ) : (
-                    <div style={{ margin: '16px auto', textAlign: 'center' }}>
+                    <div style={{margin: '16px auto', textAlign: 'center'}}>
                         Nejsou žádné recepty ke zobrazení
                     </div>
                 )}

@@ -1,29 +1,29 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import React, {useContext, useEffect, useState} from 'react';
+import {Button, Form, Modal, Table} from 'react-bootstrap';
 import axios from 'axios';
-import { AlertContext } from '../../context/AlertContext';
+import {AlertContext} from '../../context/AlertContext';
 
-function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes, recipeData }) {
+function RecipeGradeForm({ingredientList, show, setAddRecipeShow, reloadRecipes, recipeData}) {
     const [formData, setFormData] = useState({
         id: '',
         name: '',
         description: '',
         imgUri: '',
-        ingredients: [{ id: '', amount: 0, unit: '' }]
+        ingredients: [{id: '', amount: 0, unit: ''}]
     });
     const [validated, setValidated] = useState(false);
-    const { setAlertMessage, setShowAlert } = useContext(AlertContext);
+    const {setAlertMessage, setShowAlert} = useContext(AlertContext);
 
     useEffect(() => {
         if (recipeData) {
-            setFormData({ ...recipeData });
+            setFormData({...recipeData});
         } else {
             setFormData({
                 id: '',
                 name: '',
                 description: '',
                 imgUri: '',
-                ingredients: [{ id: '', amount: 0, unit: '' }]
+                ingredients: [{id: '', amount: 0, unit: ''}]
             });
         }
     }, [recipeData]);
@@ -31,7 +31,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
     const handleClose = () => setAddRecipeShow(false);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData(prevData => ({
             ...prevData,
             [name]: value
@@ -39,7 +39,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
     };
 
     const handleIngredientChange = (index, e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         const newIngredients = [...formData.ingredients];
         newIngredients[index] = {
             ...newIngredients[index],
@@ -54,7 +54,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
     const addIngredient = () => {
         setFormData(prevData => ({
             ...prevData,
-            ingredients: [...prevData.ingredients, { id: '', amount: 0, unit: '' }]
+            ingredients: [...prevData.ingredients, {id: '', amount: 0, unit: ''}]
         }));
     };
 
@@ -150,7 +150,8 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
                             maxLength={800} // HTML Validator: maxLength
                             required
                         />
-                        <Form.Control.Feedback type="invalid">Zadejte popis s maximální délkou 800 znaků.</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Zadejte popis s maximální délkou 800
+                            znaků.</Form.Control.Feedback>
                     </Form.Group>
 
 
