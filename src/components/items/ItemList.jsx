@@ -153,6 +153,9 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                         </div>
                     </Navbar.Collapse>
                 </div>
+
+
+
             </Navbar>
 
             {/* Alert component to display the message */}
@@ -161,11 +164,13 @@ function ItemList({ recipeList, ingredientList, reloadRecipes }) {
                     variant="info"
                     onClose={() => setShowAlert(false)} // Hide alert on close
                     dismissible
-                    className="text-center" // React Bootstrap utility class to center-align text
+                    className="fixed-alert text-center"
                 >
                     {alertMessage}
                 </Alert>
             )}
+
+
 
             {addRecipeShow && (
                 <RecipeGradeForm

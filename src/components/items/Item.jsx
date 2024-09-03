@@ -74,7 +74,7 @@ function Item({ recipe, ingredientList, isSmallDetail, onEdit }) {
                     Více o receptu
                 </Button>
                 {/* Přidání tlačítka pro úpravu */}
-                <Button variant="secondary" className="mt-2" onClick={() => onEdit(recipe)}>
+                <Button variant="secondary" className="mt-2 center-button" onClick={() => onEdit(recipe)}>
                     <Icon path={mdiPencil} size={1} /> Upravit
                 </Button>
             </Card.Body>

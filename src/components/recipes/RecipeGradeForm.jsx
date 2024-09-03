@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { AlertContext } from '../../context/AlertContext';
 
@@ -16,9 +16,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
 
     useEffect(() => {
         if (recipeData) {
-            setFormData({
-                ...recipeData
-            });
+            setFormData({ ...recipeData });
         } else {
             setFormData({
                 id: '',
@@ -34,41 +32,42 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData(prevData => ({
+            ...prevData,
             [name]: value
-        });
+        }));
     };
 
     const handleIngredientChange = (index, e) => {
         const { name, value } = e.target;
         const newIngredients = [...formData.ingredients];
-        newIngredients[index][name] = value;
-        setFormData({
-            ...formData,
+        newIngredients[index] = {
+            ...newIngredients[index],
+            [name]: value
+        };
+        setFormData(prevData => ({
+            ...prevData,
             ingredients: newIngredients
-        });
+        }));
     };
 
     const addIngredient = () => {
-        setFormData({
-            ...formData,
-            ingredients: [
-                ...formData.ingredients,
-                { id: '', amount: 0, unit: '' }
-            ]
-        });
+        setFormData(prevData => ({
+            ...prevData,
+            ingredients: [...prevData.ingredients, { id: '', amount: 0, unit: '' }]
+        }));
     };
 
     const removeIngredient = (index) => {
-        const newIngredients = formData.ingredients.filter((_, i) => i !== index);
-        setFormData({
-            ...formData,
-            ingredients: newIngredients
-        });
+        setFormData(prevData => ({
+            ...prevData,
+            ingredients: prevData.ingredients.filter((_, i) => i !== index)
+        }));
     };
 
     const handleSubmit = async (e) => {
+        console.log(formData)
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -78,17 +77,32 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
             return;
         }
 
+        const recipeData = {
+            id: formData.id,
+            name: formData.name,
+            description: formData.description,
+            imgUri: formData.imgUri,
+            ingredients: formData.ingredients.map((ingredient) => ({
+                id: ingredient.id,
+                amount: parseFloat(ingredient.amount),
+                unit: ingredient.unit
+            }))
+        };
+
+        console.log(recipeData)
+
+
         try {
-            if (formData.id) {
+            if (recipeData.id) {
                 // Update existing recipe
-                const response = await axios.post(`http://localhost:3000/recipe/update`, formData);
+                const response = await axios.post(`http://localhost:3000/recipe/update`, recipeData);
                 if (response.status === 200) {
                     console.log("Recipe successfully updated:", response.data);
                     setAlertMessage("Recept byl úspěšně aktualizován!");
                 }
             } else {
                 // Create new recipe
-                const response = await axios.post('http://localhost:3000/recipe/create', formData);
+                const response = await axios.post('http://localhost:3000/recipe/create', recipeData);
                 if (response.status === 200 || response.status === 201) {
                     console.log("Recipe successfully created:", response.data);
                     setAlertMessage("Recept byl úspěšně vytvořen!");
@@ -114,7 +128,7 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Form.Group controlId="formName">
-                        <Form.Label>Název</Form.Label>
+                        <Form.Label>Název receptu</Form.Label>
                         <Form.Control
                             type="text"
                             name="name"
@@ -132,74 +146,110 @@ function RecipeGradeForm({ ingredientList, show, setAddRecipeShow, reloadRecipes
                             name="description"
                             value={formData.description}
                             onChange={handleInputChange}
+                            rows={3}
+                            maxLength={800} // HTML Validator: maxLength
                             required
                         />
-                        <Form.Control.Feedback type="invalid">Prosím, zadejte popis receptu.</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">Zadejte popis s maximální délkou 800 znaků.</Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group controlId="formImgUri">
-                        <Form.Label>Obrázek</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="imgUri"
-                            value={formData.imgUri}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
 
-                    <Form.Label>Suroviny</Form.Label>
-                    {formData.ingredients.map((ingredient, index) => (
-                        <div key={index} className="ingredient-row">
-                            <Form.Group controlId={`ingredientId${index}`}>
-                                <Form.Label>ID</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    name="id"
-                                    value={ingredient.id}
-                                    onChange={(e) => handleIngredientChange(index, e)}
-                                >
-                                    <option value="">Vyberte surovinu</option>
-                                    {ingredientList.map((item) => (
-                                        <option key={item.id} value={item.id}>
-                                            {item.name}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
+                    <Form.Label>Ingredience</Form.Label>
+                    <Table bordered>
+                        <thead>
+                        <tr>
+                            <th style={{width: "65%"}}>Ingredience</th>
+                            <th style={{width: "15%"}}>Množství</th>
+                            <th style={{width: "10%"}}>Jednotka</th>
+                            <th style={{width: "10%"}}>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {formData.ingredients.map((ingredient, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <Form.Group controlId={`formIngredientId${index}`}>
+                                        <Form.Control
+                                            as="select"
+                                            name="id"
+                                            value={ingredient.id}
+                                            onChange={(e) => handleIngredientChange(index, e)}
+                                            required // HTML Validator: required
+                                        >
+                                            {/* Default option prompting the user to select an ingredient */}
+                                            <option value="" disabled>
+                                                Vyberte ingredienci
+                                            </option>
+                                            {ingredientList.length > 0 ? (
+                                                ingredientList.map((ing) => (
+                                                    <option key={ing.id} value={ing.id}>
+                                                        {ing.name}
+                                                    </option>
+                                                ))
+                                            ) : (
+                                                <option value="">
+                                                    Žádné ingredience nejsou dostupné
+                                                </option>
+                                            )}
+                                        </Form.Control>
+                                        <Form.Control.Feedback type="invalid">
+                                            Vyberte ingredienci.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </td>
+                                <td>
+                                    <Form.Group controlId={`formIngredientAmount${index}`}>
+                                        <Form.Control
+                                            type="number"
+                                            name="amount"
+                                            value={ingredient.amount}
+                                            onChange={(e) => handleIngredientChange(index, e)}
 
-                            <Form.Group controlId={`ingredientAmount${index}`}>
-                                <Form.Label>Množství</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="amount"
-                                    value={ingredient.amount}
-                                    onChange={(e) => handleIngredientChange(index, e)}
-                                />
-                            </Form.Group>
-
-                            <Form.Group controlId={`ingredientUnit${index}`}>
-                                <Form.Label>Jednotka</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="unit"
-                                    value={ingredient.unit}
-                                    onChange={(e) => handleIngredientChange(index, e)}
-                                />
-                            </Form.Group>
-
-                            <Button variant="danger" onClick={() => removeIngredient(index)}>
-                                Odebrat
-                            </Button>
-                        </div>
-                    ))}
-
-                    <Button variant="secondary" onClick={addIngredient}>
-                        Přidat surovinu
+                                            required // HTML Validator: required
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            Zadejte množství.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </td>
+                                <td>
+                                    <Form.Group controlId={`formIngredientUnit${index}`}>
+                                        <Form.Control
+                                            type="text"
+                                            name="unit"
+                                            value={ingredient.unit}
+                                            onChange={(e) => handleIngredientChange(index, e)}
+                                            maxLength={10}
+                                            required // HTML Validator: required
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            Zadejte jednotku o maximální délce 10 znaků.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </td>
+                                <td>
+                                    <Button variant="danger" onClick={() => removeIngredient(index)}>
+                                        Smazat
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </Table>
+                    <Button variant="primary" onClick={addIngredient} className="mb-3">
+                        Přidat další ingredienci
                     </Button>
 
-                    <Button variant="primary" type="submit">
-                        Uložit
-                    </Button>
+
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Zavřít
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            Uložit
+                        </Button>
+                    </Modal.Footer>
+
                 </Form>
             </Modal.Body>
         </Modal>

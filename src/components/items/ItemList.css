@@ -22,3 +22,14 @@
         margin-left: 1rem;
     }
 }
+
+.fixed-alert {
+    position: fixed;
+    top: 4rem; /* Vzdálenost od vrcholu stránky */
+    left: 50%; /* Středně horizontálně */
+    transform: translateX(-50%); /* Umožní horizontální zarovnání na střed */
+    z-index: 1050; /* Ujistí se, že alert bude nad ostatními prvky */
+    width: calc(100% - 2rem); /* Šířka alertu, aby pokryl skoro celou šířku stránky */
+    max-width: 600px; /* Maximální šířka alertu */
+    margin: 0; /* Odstraní výchozí margin */
+}

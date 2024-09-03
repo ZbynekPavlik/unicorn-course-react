@@ -30,13 +30,13 @@ function ItemTableList({ recipeList, ingredientList, onEdit }) { // Add onEdit p
     return (
         <Container>
             {itemType === ITEM_TYPES.RECIPE && (
-                <Table>
+                <Table striped bordered hover>
                     <thead>
                     <tr>
                         <th>ID recept</th>
                         <th>Název</th>
                         <th>Popis</th>
-                        <th>Akce</th> {/* New column for actions */}
+                        <th>Akce</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,7 +60,7 @@ function ItemTableList({ recipeList, ingredientList, onEdit }) { // Add onEdit p
             )}
 
             {itemType === ITEM_TYPES.INGREDIENT && (
-                <Table>
+                <Table striped bordered hover>
                     <thead>
                     <tr>
                         <th>ID ingredience</th>
