@@ -3,10 +3,14 @@ import Table from "react-bootstrap/Table";
 import {Button, Container} from "react-bootstrap";
 import {ItemTypeContext} from "../../context/ItemTypeContext";
 import {ITEM_TYPES} from "../../constants";
+import {UserContext} from "../../context/UserProvider";
 
 function ItemTableList({recipeList, ingredientList, onEdit}) { // Add onEdit prop
 
     const {itemType} = useContext(ItemTypeContext);
+
+    const {isAuthorized} = useContext(UserContext);
+
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};
@@ -36,7 +40,11 @@ function ItemTableList({recipeList, ingredientList, onEdit}) { // Add onEdit pro
                         <th>ID recept</th>
                         <th>Název</th>
                         <th>Popis</th>
-                        <th>Akce</th>
+
+                        {isAuthorized === true &&
+                            <th>Akce</th>
+                        }
+
                     </tr>
                     </thead>
                     <tbody>
@@ -45,14 +53,17 @@ function ItemTableList({recipeList, ingredientList, onEdit}) { // Add onEdit pro
                             <td>{recipe.id}</td>
                             <td>{recipe.name}</td>
                             <td>{recipe.description}</td>
-                            <td>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => onEdit(recipe)}
-                                >
-                                    Upravit
-                                </Button>
-                            </td>
+                            {isAuthorized === true &&
+                                <td>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={() => onEdit(recipe)}
+                                    >
+                                        Upravit
+                                    </Button>
+                                </td>
+                            }
+
                         </tr>
                     ))}
                     </tbody>

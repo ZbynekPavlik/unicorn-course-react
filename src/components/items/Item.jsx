@@ -7,9 +7,11 @@ import Icon from '@mdi/react';
 import {mdiPencil, mdiSilverwareForkKnife} from '@mdi/js'; // Import ikony pro tlačítko úpravy
 import {ItemTypeContext} from '../../context/ItemTypeContext';
 import {ITEM_TYPES} from '../../constants';
+import {UserContext} from "../../context/UserProvider";
 
 function Item({recipe, ingredientList, isSmallDetail, onEdit}) {
     const {itemType} = useContext(ItemTypeContext);
+    const {isAuthorized} = useContext(UserContext);
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};
@@ -74,10 +76,16 @@ function Item({recipe, ingredientList, isSmallDetail, onEdit}) {
                 <Button variant="primary" className="center-button">
                     Více o receptu
                 </Button>
-                {/* Přidání tlačítka pro úpravu */}
-                <Button variant="secondary" className="mt-2 center-button" onClick={() => onEdit(recipe)}>
-                    <Icon path={mdiPencil} size={1}/> Upravit
-                </Button>
+
+                {isAuthorized === true &&
+                    /* Přidání tlačítka pro úpravu */
+                    <Button variant="secondary" className="mt-2 center-button" onClick={() => onEdit(recipe)}>
+                        <Icon path={mdiPencil} size={1}/> Upravit
+                    </Button>
+
+                }
+
+
             </Card.Body>
         </Card>
     );

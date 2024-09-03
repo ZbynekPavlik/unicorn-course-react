@@ -9,6 +9,7 @@ import {Container, Nav, NavDropdown, Offcanvas} from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import {ItemTypeProvider} from "./context/ItemTypeContext";
 import {AlertProvider} from "./context/AlertContext";
+import {UserProvider} from "./context/UserProvider";
 
 function App() {
     const [recipeLoadCall, setRecipeLoadCall] = useState({state: "pending"});
@@ -129,55 +130,57 @@ function App() {
     }
 
     return (
-        <AlertProvider>
-            <ItemTypeProvider>
+        <UserProvider>
+            <AlertProvider>
+                <ItemTypeProvider>
 
 
-                <div className="App">
-                    <Navbar
-                        fixed="top"
-                        expand={"sm"}
-                        className="mb-3"
-                        bg="dark"
-                        variant="dark"
-                    >
-                        <Container fluid>
-                            <Navbar.Brand onClick={() => navigate("/")}>
-                                Bookcook
-                            </Navbar.Brand>
-                            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`}/>
-                            <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
-                                <Offcanvas.Header closeButton>
-                                    <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
-                                        Bookcook
-                                    </Offcanvas.Title>
-                                </Offcanvas.Header>
-                                <Offcanvas.Body>
-                                    <Nav className="justify-content-end flex-grow-1 pe-3">
-                                        {
-                                            //getBookcookListDropdown()
-                                        }
-                                        <Nav.Link onClick={() => navigate("/recipeList")}>
-                                            Recepty
-                                        </Nav.Link>
-                                        <Nav.Link onClick={() => navigate("/ingredientList")}>
-                                            Ingredience
-                                        </Nav.Link>
-                                    </Nav>
-                                </Offcanvas.Body>
-                            </Navbar.Offcanvas>
-                        </Container>
-                    </Navbar>
+                    <div className="App">
+                        <Navbar
+                            fixed="top"
+                            expand={"sm"}
+                            className="mb-3"
+                            bg="dark"
+                            variant="dark"
+                        >
+                            <Container fluid>
+                                <Navbar.Brand onClick={() => navigate("/")}>
+                                    Bookcook
+                                </Navbar.Brand>
+                                <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`}/>
+                                <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
+                                    <Offcanvas.Header closeButton>
+                                        <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
+                                            Bookcook
+                                        </Offcanvas.Title>
+                                    </Offcanvas.Header>
+                                    <Offcanvas.Body>
+                                        <Nav className="justify-content-end flex-grow-1 pe-3">
+                                            {
+                                                //getBookcookListDropdown()
+                                            }
+                                            <Nav.Link onClick={() => navigate("/recipeList")}>
+                                                Recepty
+                                            </Nav.Link>
+                                            <Nav.Link onClick={() => navigate("/ingredientList")}>
+                                                Ingredience
+                                            </Nav.Link>
+                                        </Nav>
+                                    </Offcanvas.Body>
+                                </Navbar.Offcanvas>
+                            </Container>
+                        </Navbar>
 
-                    <Outlet/>
-                </div>
+                        <Outlet/>
+                    </div>
 
 
-                {
-                    //getChild()
-                }
-            </ItemTypeProvider>
-        </AlertProvider>
+                    {
+                        //getChild()
+                    }
+                </ItemTypeProvider>
+            </AlertProvider>
+        </UserProvider>
     );
 }
 

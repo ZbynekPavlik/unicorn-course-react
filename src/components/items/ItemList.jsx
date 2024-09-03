@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import {
+    mdiAccount,
     mdiArrowCollapseVertical,
     mdiArrowExpandVertical,
     mdiMagnify,
@@ -21,6 +22,7 @@ import {ITEM_TYPES, LAYOUT_TYPES} from '../../constants';
 import {ItemTypeContext} from '../../context/ItemTypeContext';
 import RecipeGradeForm from '../recipes/RecipeGradeForm';
 import {AlertContext} from '../../context/AlertContext';
+import {UserContext} from "../../context/UserProvider";
 
 function ItemList({recipeList, ingredientList, reloadRecipes}) {
     const [isSmallDetail, setIsSmallDetail] = useState(false);
@@ -32,6 +34,7 @@ function ItemList({recipeList, ingredientList, reloadRecipes}) {
 
     const {alertMessage, setAlertMessage, showAlert, setShowAlert} = useContext(AlertContext);
     const {itemType} = useContext(ItemTypeContext);
+    const {isAuthorized, setIsAuthorized} = useContext(UserContext);
 
     const handleAddRecipeShow = () => {
         setSelectedRecipe(null); // Ensure we are adding a new recipe
@@ -78,6 +81,10 @@ function ItemList({recipeList, ingredientList, reloadRecipes}) {
     function handleSearchDelete(event) {
         if (!event.target.value) setSearchBy('');
     }
+
+    const toggleAuthorization = () => {
+        setIsAuthorized(prevState => !prevState);
+    };
 
     return (
         <>
@@ -143,7 +150,7 @@ function ItemList({recipeList, ingredientList, reloadRecipes}) {
                                 </Button>
                             </div>
 
-                            {itemType === ITEM_TYPES.RECIPE && (
+                            {itemType === ITEM_TYPES.RECIPE && isAuthorized && (
                                 <Button
                                     style={{float: 'right'}}
                                     variant="secondary"
@@ -153,11 +160,20 @@ function ItemList({recipeList, ingredientList, reloadRecipes}) {
                                     <Icon path={mdiPlus} size={1}/> Přidat recept
                                 </Button>
                             )}
+
+                            {/* Add authorization toggle button */}
+                            <div className="ms-2">
+                                <Button
+                                    variant="outline-secondary"
+                                    onClick={toggleAuthorization}
+                                >
+                                    <Icon size={1} path={mdiAccount}/>
+                                    {isAuthorized ? 'Odhlásit se' : 'Přihlásit se'}
+                                </Button>
+                            </div>
                         </div>
                     </Navbar.Collapse>
                 </div>
-
-
             </Navbar>
 
             {/* Alert component to display the message */}
@@ -171,7 +187,6 @@ function ItemList({recipeList, ingredientList, reloadRecipes}) {
                     {alertMessage}
                 </Alert>
             )}
-
 
             {addRecipeShow && (
                 <RecipeGradeForm
