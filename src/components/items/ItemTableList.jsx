@@ -1,12 +1,12 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import Table from "react-bootstrap/Table";
-import {Container} from "react-bootstrap";
-import {ItemTypeContext} from "../../context/ItemTypeContext";
-import {ITEM_TYPES} from "../../constants";
+import { Container, Button } from "react-bootstrap";
+import { ItemTypeContext } from "../../context/ItemTypeContext";
+import { ITEM_TYPES } from "../../constants";
 
-function ItemTableList({recipeList, ingredientList}) {
+function ItemTableList({ recipeList, ingredientList, onEdit }) { // Add onEdit prop
 
-    const {itemType} = useContext(ItemTypeContext);
+    const { itemType } = useContext(ItemTypeContext);
 
     const getIngredientNames = (recipeIngredients, ingredientList) => {
         const ingredientNames = {};
@@ -36,6 +36,7 @@ function ItemTableList({recipeList, ingredientList}) {
                         <th>ID recept</th>
                         <th>Název</th>
                         <th>Popis</th>
+                        <th>Akce</th> {/* New column for actions */}
                     </tr>
                     </thead>
                     <tbody>
@@ -44,6 +45,14 @@ function ItemTableList({recipeList, ingredientList}) {
                             <td>{recipe.id}</td>
                             <td>{recipe.name}</td>
                             <td>{recipe.description}</td>
+                            <td>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => onEdit(recipe)}
+                                >
+                                    Upravit
+                                </Button>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
@@ -54,7 +63,7 @@ function ItemTableList({recipeList, ingredientList}) {
                 <Table>
                     <thead>
                     <tr>
-                        <th>ID recept</th>
+                        <th>ID ingredience</th>
                         <th>Název</th>
                         <th>Ingredience</th>
                     </tr>
